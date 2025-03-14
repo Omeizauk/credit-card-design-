@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Bank Statements</title>
+</head>
+<body>
+
+<h1>User Bank Statements</h1>
+
+<div id="userStatements">
+    <!-- Bank statements will be displayed here -->
+</div>
+
+<script>
+// Fetch data from the server-side script that retrieves bank statements
+fetch('./connect.php/button.php')
+   .then(response => response.json())  // Assuming response is JSON
+    .then(data => {
+        const statementsContainer = document.getElementById('userStatements');
+        if (data && data.length > 0) {
+            // Iterate through retrieved data and create HTML elements to display statements
+            data.forEach(statement => {
+                const statementElement = document.createElement('div');
+                statementElement.classList.add('statement');
+
+                // Format statement details into HTML
+                statementElement.innerHTML = `
+                    <h3><?php echo $statement['full_name']; ?></h3>
+                    <p><strong>Transaction Date:</strong> <?php echo $statement['transaction_date']; ?></p>
+                    <p><strong>Description:</strong> <?php echo $statement['description']; ?></p>
+                    <p><strong>Amount:</strong> $<?php echo number_format($statement['amount'], 2); ?></p>
+                    <hr>
+                `;
+
+                statemenxtsContainer.appendChild(statementElement);
+            });
+        } else {
+            // Display message if no data retrieved
+            statementsContainer.innerHTML = '<p>No bank statements found.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+</script>
+
+
+</body>
+</html>
